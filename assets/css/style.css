@@ -11,6 +11,14 @@
     color: 	#db0000;
 }
 
+.cell.two{
+    width: calc(100% / 9);
+}
+
+.cell.three{
+    width: calc(100% / 7);
+}
+
 .my_btn{
     font-family: 'Kaushan Script', cursive;
 }
