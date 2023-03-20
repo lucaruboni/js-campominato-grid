@@ -25,157 +25,126 @@ Ogni volta che clicco su un quadrato questo si colora */
 //seleziono il bottone nella dom
 
 
-const btnElement = document.querySelector('button')
 
 
-const difficult = document.querySelector('.difficoltà').addEventListener('input', function(){
-    let selectedDifficulty = document.querySelector('.difficoltà').value;
-    console.log(Number(selectedDifficulty))
-    console.log(difficult)
-})
-
-//event listener al click del btn che crea la griglia
-
-let difficultValue;
-
-btnElement.addEventListener('click', function(){
-
-
-
-     difficultValue = Number(selectedDifficulty)
+    const level = document.querySelector('form')
     
-
-    if (difficultValue === 1) {
-           //seleziono il contenitore delle mie celle
-    const container = document.querySelector(".row");
-    let maxCellsNumber = 100
     
-    //ciclo per creare le celle
-    
-    for (let i = 0; i < maxCellsNumber; i++) {
-    
-        const cell = `<div class="cell active">${Number([i + 1])}</div>`
-        console.log(cell)
-        container.innerHTML += cell
+    level.addEventListener('submit', function(e){
         
-    }
+    e.preventDefault()      
+    
+    //select the game level
 
-    cells = document.querySelectorAll('.cell.active')
-    console.log(cells)
+    //function to select the level
+
+    const maxCells = selectLevel(level.value)
+
+    //generate the game field
+
+    const fieldEl = document.querySelector('.row')
+
+
+
+    generateField(maxCells, fieldEl)
     
-    for (let i = 0; i < cells.length; i++){
-        const cellSelected = cells[i];
-        console.log(cellSelected)
-        cellSelected.addEventListener('click', function(){
-    
-            this.classList.toggle('bg_black')
-            
-            console.log(`You clicked cell n° ${Number([i + 1])}`)
     })
-       
-    }
-    }
-
-
-// quando clicco su una cella me la colora
 
 
 
 
 
+    //funzione per selezionare il livello
 
-/* DIFFICOLTA' DUE */
+    function selectLevel(level){
 
+    //se non viene selezionato un numero allora lo traformo in numero per renderlo leggibile da js
 
-else if(difficultValue === 2) {
-    //seleziono il contenitore delle mie celle
-const container = document.querySelector(".row");
-let maxCellsNumber = 81
-
-//ciclo per creare le celle
-
-for (let i = 0; i < maxCellsNumber; i++) {
-
- const cell = `<div class="cell two active">${Number([i + 1])}</div>`
- console.log(cell)
- container.innerHTML += cell
- 
-}
-
-cells = document.querySelectorAll('.cell.active')
-console.log(cells)
-
-for (let i = 0; i < cells.length; i++){
-const cellSelected = cells[i];
-console.log(cellSelected)
-cellSelected.addEventListener('click', function(){
-
- this.classList.toggle('bg_black')
- 
- console.log(`You clicked cell n° ${Number([i + 1])}`)
-})
-
-}
-
-}
-
-
-// quando clicco su una cella me la colora
-
-
-
-
-/* DIFFICOLTA' 3 */
-
-
-else if (difficultValue === 3) {
-    //seleziono il contenitore delle mie celle
-const container = document.querySelector(".row");
-let maxCellsNumber = 81
-
-//ciclo per creare le celle
-
-for (let i = 0; i < maxCellsNumber; i++) {
-
- const cell = `<div class="cell two active">${Number([i + 1])}</div>`
- console.log(cell)
- container.innerHTML += cell
- 
-}
-
-cells = document.querySelectorAll('.cell.active')
-console.log(cells)
-
-for (let i = 0; i < cells.length; i++){
-    const cellSelected = cells[i];
-    console.log(cellSelected)
-    cellSelected.addEventListener('click', function(){
-
-        this.classList.toggle('bg_black')
+    if(typeof level !== Number){
         
-        console.log(`You clicked cell n° ${Number([i + 1])}`)
-})
-   
+        level = Number(level)
+    }
+
+    let maxCells; 
+
+//definisco i livelli 
+
+switch (level) {
+    case 1:
+        maxCells = 100
+        
+        break;
+    case 2:
+        maxCells = 81    
+
+    case 3:
+        maxCells = 49
+
+    default:
+        maxCells = 100
+
+        break;
 }
+
+    //ritorno il numero massimo di celle
+
+    return maxCells
 }
 
 
-// quando clicco su una cella me la colora
-else{
+//funzione per generare la singola cella
 
-    alert("devi inserire la difficoltà")
+function generateCell(number, maxCells){
+
+    //creo la cella nella dom
+
+    const cell = document.createElement('div')
+    //do una classe alla cella
+    cell.className = 'cell'
+    //aggiungo il numero all'interno della cella
+    cell.textContent = number
+
+    //definisco la grandezza del campo da gioco
+
+    cell.style.width = `calc(100% / ${Math.sqrt(maxCells)})`
+
+
+    //event listener per colorare la cella al click
+
+    cell.addEventListener('click', function(e){
+        
+        //seleziono la cella cliccata
+        e.target.classList.toggle('active')
+
+        //loggo il numero corrispondente alla cella cliccata in console
+        console.log(e.target.textContent)
+    })
+
+    //ritorno la cella
+
+    return cell
+
 }
 
 
 
 
-})
+
+//funzione per generare il campo da gioco
 
 
+function generateField(maxCells, domEl){
+
+    //svuoto il contenuto della pagina 
+    domEl.innerHTML = ''
 
 
+    //creo il ciclo per generare le celle in base al livello selezionato
 
-
+    for (let i = 1; i <= maxCells; i++){
+        domEl.insertAdjacentElement('befooreend', generateCell(i, maxCells))
+    }
+}
 
 
 
